@@ -8,7 +8,7 @@
     "test": "node test.mjs"
   },
   "dependencies": {
-    "camelcase": "6.3.0"
+    "camelcase": "7.0.1"
   },
   "devDependencies": {
     "@prooftape/core": "file:vendor/prooftape-core-0.1.0-alpha.1.tgz",
