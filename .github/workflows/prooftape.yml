@@ -1,0 +1,55 @@
+name: Dependency behavior
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  test_base:
+    name: Ordinary tests (base)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+
+  test_candidate:
+    name: Ordinary tests (candidate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+
+  comparison:
+    name: ProofTape comparison
+    needs: [test_base, test_candidate]
+    uses: DelshadH/prooftape/.github/workflows/prooftape.yml@7e2b4cf7aa0da8a7180ccf7a4b4f93a8ac0e157e
+    permissions:
+      contents: read
+    with:
+      base_ref: ${{ github.event.pull_request.base.sha }}
+      candidate_ref: ${{ github.event.pull_request.head.sha }}
+      dependency: camelcase
+      command: node test.mjs

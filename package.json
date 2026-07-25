@@ -1,0 +1,22 @@
+{
+  "name": "prooftape-consumer-example",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node app.mjs",
+    "test": "node test.mjs"
+  },
+  "dependencies": {
+    "camelcase": "6.3.0"
+  },
+  "devDependencies": {
+    "@prooftape/core": "file:vendor/prooftape-core-0.1.0-alpha.1.tgz",
+    "@prooftape/hook": "file:vendor/prooftape-hook-0.1.0-alpha.1.tgz",
+    "@prooftape/schema": "file:vendor/prooftape-schema-0.1.0-alpha.1.tgz",
+    "prooftape": "file:vendor/prooftape-0.1.0-alpha.1.tgz"
+  },
+  "engines": {
+    "node": ">=22.15.0"
+  }
+}
